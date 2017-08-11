@@ -1,0 +1,16 @@
+server:
+  port: 8092
+
+spring:
+  application:
+    name: api-weather-service
+management:
+  security:
+    enabled: false
+
+service:
+   getHistoricUri: api/v1/weather/history/city/{city}/prediction/{prediction}
+   getPredictionUri: api/v1/weather/{city}
+
+dependencies:
+   weatherServiceId: weather-service
