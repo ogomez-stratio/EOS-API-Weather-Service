@@ -1,6 +1,11 @@
 spring:
   cloud:
-    consul:
-      discovery:
-        preferIpAddress: true
-        queryPassing: true
+      consul:
+        host: ${CONSUL_HOST:localhost}
+        port: ${CONSUL_PORT:8500}
+        discovery:
+          hostname: ${SPRING_DISCOVERY_HOSTNAME:localhost}
+          port: ${SPRING_DISCOVERY_PORT:8092} # same as server.port
+          preferIpAddress: ${SPRING_DISCOVERY_PREFER_IP:true}
+          queryPassing: ${SPRING_DISCOVERY_QUERY_PASSING:true}
+          instanceId: ${MESOS_TASK_ID:api-wheather-service-default-task}
