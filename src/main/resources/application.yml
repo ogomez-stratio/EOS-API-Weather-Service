@@ -13,4 +13,4 @@ service:
    getPredictionUri: api/v1/weather/{city}
 
 dependencies:
-   weatherServiceId: ${SERVICE_DEPENDECY_WEATHER:weather-service}
+   weatherServiceId: ${SERVICE_DEPENDENCY_WEATHER:weather-service}
