@@ -7,5 +7,6 @@ spring:
           hostname: ${SPRING_DISCOVERY_HOSTNAME:localhost}
           port: ${SPRING_DISCOVERY_PORT:8092} # same as server.port
           preferIpAddress: ${SPRING_DISCOVERY_PREFER_IP:true}
+          ipAddress: ${SPRING_DISCOVERY_IP_ADDRESS}
           queryPassing: ${SPRING_DISCOVERY_QUERY_PASSING:true}
           instanceId: ${MESOS_TASK_ID:api-wheather-service-default-task}
