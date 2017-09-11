@@ -1,10 +1,11 @@
 package com.stratio.apiweatherservice.service.impl;
 
-import com.stratio.apiweatherservice.component.DiscoveryClient;
+import com.stratio.apiweatherservice.config.DcosConfig;
+import com.stratio.apiweatherservice.config.DependenciesConfig;
+import com.stratio.apiweatherservice.config.ServiceConfig;
 import com.stratio.apiweatherservice.dto.WeatherEntityDto;
 import com.stratio.apiweatherservice.dto.WeatherResponseDto;
 import com.stratio.apiweatherservice.service.ApiCallerService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -20,17 +21,10 @@ import java.util.List;
 class ApiCallerServiceImpl implements ApiCallerService {
 
     private final RestTemplate restTemplate;
-    private final DiscoveryClient discoveryClient;
-
-    @Value("${dependencies.weatherServiceId}")
-    private String weatherServiceId;
-
-    @Value("${service.getHistoricUri}")
-    private String getHistoricUri;
-
-    @Value(("${service.getPredictionUri}"))
-    private String getPredictionUri;
-
+    private final DcosConfig dcosConfig;
+    private final ServiceConfig serviceConfig;
+    private final DependenciesConfig dependenciesConfig;
+    private static String protocol = "http://";
 
     @Override
     public WeatherResponseDto getPrediction(String city)
@@ -43,7 +37,11 @@ class ApiCallerServiceImpl implements ApiCallerService {
         String[] parameters ={city};
 
         ResponseEntity<WeatherResponseDto> result = restTemplate.exchange(
-                discoveryClient.getServiceUri(weatherServiceId)+getPredictionUri,
+                protocol
+                        +dependenciesConfig.getWeatherServiceId()
+                        +dcosConfig.getDomain()+':'
+                        +dependenciesConfig.getWeatherServicePort()
+                        +serviceConfig.getGetPredictionUri(),
                 HttpMethod.GET,
                 request,
                 WeatherResponseDto.class,
@@ -63,7 +61,11 @@ class ApiCallerServiceImpl implements ApiCallerService {
         String[] parameters ={city,prediction};
 
         ResponseEntity<WeatherEntityDto[]> result = restTemplate.exchange(
-                discoveryClient.getServiceUri(weatherServiceId)+getHistoricUri,
+                protocol
+                        +dependenciesConfig.getWeatherServiceId()
+                        +dcosConfig.getDomain()+':'
+                        +dependenciesConfig.getWeatherServicePort()
+                        +serviceConfig.getGetHistoricUri(),
                 HttpMethod.GET,
                 request,
                 WeatherEntityDto[].class,
@@ -72,8 +74,14 @@ class ApiCallerServiceImpl implements ApiCallerService {
         return Arrays.asList(result.getBody());
     }
 
-    ApiCallerServiceImpl(RestTemplate restTemplate, DiscoveryClient discoveryClient) {
+    ApiCallerServiceImpl(RestTemplate restTemplate,
+                         DcosConfig dcosConfig,
+                         ServiceConfig serviceConfig,
+                         DependenciesConfig dependenciesConfig) {
+
         this.restTemplate = restTemplate;
-        this.discoveryClient = discoveryClient;
+        this.dcosConfig = dcosConfig;
+        this.serviceConfig = serviceConfig;
+        this.dependenciesConfig = dependenciesConfig;
     }
 }

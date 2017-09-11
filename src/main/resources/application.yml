@@ -13,4 +13,9 @@ service:
    getPredictionUri: api/v1/weather/{city}
 
 dependencies:
-   weatherServiceId: weather-service
+   weatherServicePort: ${MINUTEMAN_WEATHER_SERVICE_PORT:8090}
+   weatherServiceId: ${MINUTEMAN_WEATHER_SERVICE_ID:}
+
+dcos-cluster:
+  domain: ${MINUTEMAN_DOMAIN:localhost}
+  port: ${MINUTEMAN_API_WEATHER_PORT:8092}
